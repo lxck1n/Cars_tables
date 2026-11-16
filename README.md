@@ -1,66 +1,56 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Vehicle Owner Registry
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+`Cars_tables` is an academic web application for managing vehicle owner records. I built the core workflow in PHP and Laravel 10 using named web routes, controllers, Eloquent models and Blade views.
 
-## About Laravel
+## Core workflow
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- List owner records and filter the list by exact first name.
+- Add, edit and delete an owner record with a first name, surname and phone number.
+- Populate a local database with 50 synthetic owner records through the project seeder.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The owner registry is the main workflow. The repository also contains partial vehicle and model screens.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Where to read the code
 
-## Learning Laravel
+| File or folder | What it shows |
+| --- | --- |
+| [routes/web.php](routes/web.php) | Named routes linking the owner screens and forms to controller actions. |
+| [OwnerController.php](app/Http/Controllers/OwnerController.php) | Loads records, applies the name filter and saves or deletes data through Eloquent. |
+| [Owner.php](app/Models/Owner.php) | The Eloquent model for owner records. |
+| [Owner views](resources/views/owners) | Blade templates for the list and forms. |
+| [Migrations](database/migrations) and [seeders](database/seeders) | Database structure and synthetic examples for local use. |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+For example, the owner filter sends a form request to `OwnerController::filter`. The controller queries the `Owner` model by first name and renders the same Blade list with the matching records.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Local setup reference
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Use PHP 8.3 with PDO SQLite, Composer 2 and Node.js 22 with npm. From the repository root, install the PHP dependencies and create a local SQLite file:
 
-## Laravel Sponsors
+```sh
+composer install
+php -r "if (!file_exists('database/database.sqlite')) touch('database/database.sqlite');"
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Create a local `.env` file at the repository root with these values:
 
-### Premium Partners
+```dotenv
+APP_NAME=CarsTables
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+DB_CONNECTION=sqlite
+TELESCOPE_ENABLED=false
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Generate the app key, prepare the database and build the frontend assets:
 
-## Contributing
+```sh
+php artisan key:generate
+php artisan migrate --seed
+npm ci
+npm run build
+php artisan serve
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Open `http://127.0.0.1:8000` for the owner list. These steps are a setup reference based on the checked-in files. The coursework app is intended for local evaluation with sample data.
